@@ -80,6 +80,7 @@ func (t *Tree) Add(key []byte, value []byte) ([]byte, error) {
 	defer t.Unlock()
 
 	err := t.leaves.Add(key, value)
+	// TODOERR Report unable to add evento to history leave
 	if err != nil {
 		return nil, err
 	}
@@ -90,7 +91,8 @@ func (t Tree) ProveMembership(key []byte, value []byte) (*proof.Proof, []byte, e
 	t.Lock()
 	defer t.Unlock()
 
-	value, err := t.leaves.Get(key) // TODO check existence
+	value, err := t.leaves.Get(key)
+	// TODOERR Check existence or we receive an error trying to get the key from storage. Als should report the error to ou API
 	if err != nil {
 		log.Debug(t.leaves)
 		return nil, nil, err
@@ -129,6 +131,7 @@ func (t *Tree) toCache(key, value []byte, pos position.Position) []byte {
 		right = t.toCache(key, value, pos.Right())
 	case direction == position.Halt:
 		//this should never happen => TODO should return an error
+		// TODOERR Throw error with detailed position trace.
 		return nil
 	}
 
@@ -141,6 +144,7 @@ func (t *Tree) toCache(key, value []byte, pos position.Position) []byte {
 	if pos.ShouldBeCached() {
 		metrics.Hyper.Add("update", 1)
 		t.cache.Put(posId, digest)
+		// TODOERR Check if put to cache return any error
 	}
 
 	return digest
@@ -179,6 +183,7 @@ func (t *Tree) fromStorage(d [][]byte, value []byte, pos position.Position) []by
 
 	if len(d) > 0 && pos.IsLeaf() {
 		panic("this should never happen (unsorted LeavesSlice or broken split?)")
+		// TODOERR Output detailed trace. d cannot be negative integrer..
 	}
 
 	rightChild := pos.Right()
@@ -214,6 +219,7 @@ func (t *Tree) auditPathFromCache(key, value []byte, pos position.Position, ap p
 		t.auditPathFromCache(key, value, pos.Right(), ap)
 	case direction == position.Halt:
 		panic("this should never happen")
+		// TODOERR Throw error with detailed position trace.
 	}
 
 	return

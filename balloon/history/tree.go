@@ -113,6 +113,7 @@ func (t *Tree) Add(eventDigest, index []byte) ([]byte, error) {
 	rootDigest, err := t.computeHash(eventDigest, NewRootPosition(version), version)
 	if err != nil {
 		return nil, err
+		// TODOERR Output detailed trace about the error origin
 	}
 	return rootDigest, nil
 }
@@ -130,6 +131,7 @@ func (t Tree) ProveMembership(key []byte, index, version uint64) (*proof.Proof, 
 	err := t.auditPath(key, index, version, pos, ap)
 	if err != nil {
 		return nil, err
+		// TODOERR output information that clarifies the error origin
 	}
 
 	return proof.NewProof(pos, ap, t.hasher), nil
@@ -175,6 +177,7 @@ func (t *Tree) computeHash(eventDigest []byte, pos position.Position, version ui
 		if err == nil && len(digest) != 0 {
 			return digest, nil
 		}
+		// TODOERR We should return an error if error occurs
 	}
 
 	direction := pos.Direction(uInt64AsBytes(version))
@@ -187,6 +190,7 @@ func (t *Tree) computeHash(eventDigest []byte, pos position.Position, version ui
 		hash, err := t.computeHash(eventDigest, pos.Left(), version)
 		if err != nil {
 			return nil, err
+			// TODOERR Output error details
 		}
 		metrics.History.Add("leaf_hashes", 1)
 		digest = t.leafHash(pos.Id(), hash)
@@ -194,10 +198,12 @@ func (t *Tree) computeHash(eventDigest []byte, pos position.Position, version ui
 		hash1, err := t.computeHash(eventDigest, pos.Left(), version)
 		if err != nil {
 			return nil, err
+			// TODOERR Output error details
 		}
 		hash2, err := t.computeHash(eventDigest, pos.Right(), version)
 		if err != nil {
 			return nil, err
+			// TODOERR Output error details
 		}
 		metrics.History.Add("internal_hashes", 1)
 		digest = t.interiorHash(pos.Id(), hash1, hash2)
@@ -209,6 +215,7 @@ func (t *Tree) computeHash(eventDigest []byte, pos position.Position, version ui
 		err := t.frozen.Add(pos.Id(), digest)
 		if err != nil {
 			// if it was already frozen nothing happens
+			// TODOERR Output error details
 		}
 	}
 

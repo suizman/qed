@@ -264,10 +264,13 @@ func (b *HyperBalloon) add(event []byte) (*Commitment, error) {
 	b.version++
 
 	history, err := b.history.Add(digest, index)
+
+	// TODOERR If it fails do not roll-back just output a detailed error trace
 	if err != nil {
 		return nil, err
 	}
 	hyper, err := b.hyper.Add(digest, index)
+	// TODOERR If we fail here we should roll-back and clean history tree.
 	if err != nil {
 		return nil, err
 	}
@@ -301,6 +304,7 @@ func (b HyperBalloon) genMembershipProof(event []byte, version uint64) (*Members
 
 	if mp.Exists && mp.ActualVersion <= mp.QueryVersion {
 		mp.HistoryProof, err = b.history.ProveMembership(actualValue, mp.ActualVersion, mp.QueryVersion)
+		// TODOERR Output detailed trace if error occurs
 	} else {
 		mp.Exists = false
 		return &mp, fmt.Errorf("Unable to get proof from history tree: %v", err)

@@ -24,6 +24,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"errors"
+	"fmt"
 	"math"
 	"sync"
 
@@ -112,6 +113,7 @@ func (t *Tree) Add(eventDigest, index []byte) ([]byte, error) {
 	// calculate commitment as C_n = A_n(0,d)
 	rootDigest, err := t.computeHash(eventDigest, NewRootPosition(version), version)
 	if err != nil {
+		err = fmt.Errorf("Error computing rootDigest: %v", err)
 		return nil, err
 		// TODOERR Output detailed trace about the error origin
 	}
@@ -130,6 +132,7 @@ func (t Tree) ProveMembership(key []byte, index, version uint64) (*proof.Proof, 
 	pos := NewRootPosition(version)
 	err := t.auditPath(key, index, version, pos, ap)
 	if err != nil {
+		err = fmt.Errorf("Unable to get audit path: %v", err)
 		return nil, err
 		// TODOERR output information that clarifies the error origin
 	}
@@ -178,6 +181,9 @@ func (t *Tree) computeHash(eventDigest []byte, pos position.Position, version ui
 			return digest, nil
 		}
 		// TODOERR We should return an error if error occurs
+		if err != nil {
+			return nil, fmt.Errorf("Unable to get position: %v", err)
+		}
 	}
 
 	direction := pos.Direction(uInt64AsBytes(version))
@@ -216,6 +222,7 @@ func (t *Tree) computeHash(eventDigest []byte, pos position.Position, version ui
 		if err != nil {
 			// if it was already frozen nothing happens
 			// TODOERR Output error details
+			fmt.Errorf("Unable to store frozen node: %v", err)
 		}
 	}
 
@@ -240,8 +247,7 @@ func (t Tree) auditPath(key []byte, targetIndex, version uint64, pos position.Po
 		t.appendHashToPath(key, pos.Left(), version, ap)
 		return t.auditPath(key, targetIndex, version, pos.Right(), ap)
 	default:
-		panic("WTF")
-		return
+		panic(fmt.Sprintf("Unable to get AuditPath: %v", err))
 	}
 
 }

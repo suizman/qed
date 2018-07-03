@@ -229,6 +229,8 @@ func (b *HyperBalloon) operations() chan interface{} {
 					digest, err := b.add(msg.event)
 					if err != nil {
 						log.Error("Operations error: ", err)
+						// TODOERR We should check the nature of the error, and maybe not just die for all of them.
+
 					}
 					msg.result <- digest
 

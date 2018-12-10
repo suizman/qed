@@ -20,4 +20,4 @@
 
 go run riot.go "$@"
 
-#./stop_server
+./stop_server

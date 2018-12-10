@@ -31,10 +31,10 @@ profiler_cmd() {
         (BALLOON_VERSION=$(curl -s http://localhost:6060/debug/vars | awk -F '"version": ' '/balloon_stats/ {print $2}' | tr -d '},')
         # Avoid empty version because preload process is not already started...
         : ${BALLOON_VERSION:=0}
-        #go tool pprof -proto -sample_index=alloc_objects -output results/$(date +%s)-${BALLOON_VERSION}-mem-alloc-objects.pb.gz http://localhost:6060/debug/pprof/heap
-        #go tool pprof -proto -sample_index=alloc_space -output results/$(date +%s)-${BALLOON_VERSION}-mem-alloc-space-top.pb.gz http://localhost:6060/debug/pprof/heap
-        #go tool pprof -proto -sample_index=inuse_objects -output results/$(date +%s)-${BALLOON_VERSION}-mem-inuse-objects.pb.gz http://localhost:6060/debug/pprof/heap
-        #go tool pprof -proto -sample_index=inuse_space -output results/$(date +%s)-${BALLOON_VERSION}-mem-inuse-space-top.pb.gz http://localhost:6060/debug/pprof/heap
+        go tool pprof -proto -sample_index=alloc_objects -output results/$(date +%s)-${BALLOON_VERSION}-mem-alloc-objects.pb.gz http://localhost:6060/debug/pprof/heap
+        go tool pprof -proto -sample_index=alloc_space -output results/$(date +%s)-${BALLOON_VERSION}-mem-alloc-space-top.pb.gz http://localhost:6060/debug/pprof/heap
+        go tool pprof -proto -sample_index=inuse_objects -output results/$(date +%s)-${BALLOON_VERSION}-mem-inuse-objects.pb.gz http://localhost:6060/debug/pprof/heap
+        go tool pprof -proto -sample_index=inuse_space -output results/$(date +%s)-${BALLOON_VERSION}-mem-inuse-space-top.pb.gz http://localhost:6060/debug/pprof/heap
         go tool pprof -proto -seconds 100 -output results/$(date +%s)-${BALLOON_VERSION}-cpu-profile.pb.gz http://localhost:6060) 2>&1 > /dev/null
         sleep $PROFILING_RATE_HZ
     done

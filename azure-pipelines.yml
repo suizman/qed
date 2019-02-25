@@ -18,7 +18,7 @@ variables:
 
 steps:
 - script: |
-    apt install -y vim
+    apt-get install -y vim
     mkdir -p '$(GOBIN)'
     mkdir -p '$(GOPATH)/pkg'
     mkdir -p '$(modulePath)'

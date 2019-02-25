@@ -18,7 +18,7 @@ variables:
 
 steps:
 - script: |
-    sudo apt-get install -y vim
+    sudo apt-get install -y bzr
     mkdir -p '$(GOBIN)'
     mkdir -p '$(GOPATH)/pkg'
     mkdir -p '$(modulePath)'

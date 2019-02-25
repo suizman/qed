@@ -32,5 +32,6 @@ steps:
 - script: |
     go version
     go mod download
+    go build -v .
   workingDirectory: '$(modulePath)'
   displayName: 'Get dependencies, then build'

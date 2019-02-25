@@ -18,6 +18,9 @@ variables:
 
 steps:
 - script: |
+    echo "SPECS"
+    cat /proc/cpuinfo
+    free -m
     sudo apt-get install -y bzr
     mkdir -p '$(GOBIN)'
     mkdir -p '$(GOPATH)/pkg'

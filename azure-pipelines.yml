@@ -64,6 +64,11 @@ steps:
   workingDirectory: '$(modulePath)'
   displayName: 'Get dependencies, then build'
 
+- task: VSTest@2
+  inputs:
+    rerunFailedTests: true
+    rerunMaxAttempts: 3
+
 - task: PublishTestResults@2
   inputs:
     testRunner: JUnit

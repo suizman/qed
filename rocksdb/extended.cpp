@@ -140,13 +140,13 @@ void rocksdb_options_set_statistics(
 
 rocksdb_stats_level_t rocksdb_statistics_stats_level(
     rocksdb_statistics_t* stats) {
-        return static_cast<rocksdb_stats_level_t>(stats->rep->stats_level_);
+        return static_cast<rocksdb_stats_level_t>(stats->rep->get_stats_level());
 }
 
 void rocksdb_statistics_set_stats_level(
     rocksdb_statistics_t* stats,
     rocksdb_stats_level_t level) {
-        stats->rep->stats_level_ = static_cast<StatsLevel>(level);
+        stats->rep->set_stats_level(static_cast<StatsLevel>(level));
 }
 
 void rocksdb_statistics_reset(

@@ -35,7 +35,7 @@ type HistoryTree struct {
 func NewHistoryTree(hasherF func() hashing.Hasher, store storage.Store, cacheSize uint16) *HistoryTree {
 
 	// create cache for Adding
-	writeCache := cache.NewLruReadThroughCache(storage.HistoryTable, store, cacheSize)
+	// writeCache := cache.NewLruReadThroughCache(storage.HistoryTable, store, cacheSize)
 
 	// create cache for Membership and Incremental
 	readCache := cache.NewPassThroughCache(storage.HistoryTable, store)
@@ -43,7 +43,7 @@ func NewHistoryTree(hasherF func() hashing.Hasher, store storage.Store, cacheSiz
 	return &HistoryTree{
 		hasherF:    hasherF,
 		hasher:     hasherF(),
-		writeCache: writeCache,
+		writeCache: readCache,
 		readCache:  readCache,
 	}
 }

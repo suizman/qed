@@ -43,3 +43,17 @@ func (c PassThroughCache) Get(key []byte) ([]byte, bool) {
 	}
 	return pair.Value, true
 }
+
+func (c PassThroughCache) Put(key []byte, value []byte) {
+	m := storage.Mutation{
+		Table: c.table,
+		Key:   key,
+		Value: value,
+	}
+	err := c.store.Mutate([]*storage.Mutation{&m}, nil)
+	if err != nil {
+		panic("Error mutating data in passthough cache")
+	}
+}
+func (c PassThroughCache) Fill(r storage.KVPairReader) error { return nil }
+func (c PassThroughCache) Size() int                         { return 0 }
